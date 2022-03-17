@@ -8,8 +8,10 @@ client_credentials = SpotifyClientCredentials(client_id=config.spotify_key, clie
 sp = spotipy.Spotify(client_credentials_manager=client_credentials)
 
 def get_playlists_user(user):
-    results = sp.user_playlists(user)
-    print(results)
+    return(sp.user_playlists(user))
+
+def get_playlist_tracks(playlist_id):
+    return(sp.playlist_tracks(playlist_id))
 
 def main():
     get_playlists_user('markettes99')
