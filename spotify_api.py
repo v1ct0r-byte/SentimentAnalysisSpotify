@@ -1,5 +1,6 @@
 import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials
+import json
 
 import config
 
@@ -15,6 +16,8 @@ def get_playlist_tracks(playlist_id):
 
 def main():
     results = get_playlists_user('markettes99')
+    with open('json_data.json', 'w') as outfile:
+        json.dump(results, outfile)
     result_playlist = get_playlist_tracks(results['items'][0]['id'])
     for res in results['items']:
         print(res['id'])
