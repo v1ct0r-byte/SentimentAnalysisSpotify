@@ -28,6 +28,9 @@ def main():
     for res in result_playlists_tracks['items']:
         print(res['track']['name'] + ' -> ' + res['track']['artists'][0]['name'])
 
+    for res in result_playlists_tracks['items']:
+        print(res)
+
 
 if __name__ == "__main__":
     main()
