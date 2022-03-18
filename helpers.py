@@ -42,7 +42,7 @@ def search_data(artist,title,n,access_token):
         df = pd.DataFrame({'artist':list_artist,'title':list_title,'lyric':list_lyrics})
     else:
         searched_song = api.search_song(title, artist)
-        df = pd.DataFrame({'artist':searched_song.artist,'title':searched_song.title})
+        df = pd.DataFrame({'artist':[searched_song.artist],'title':[searched_song.title], 'lyric':[searched_song.lyrics]})
     
     
 
