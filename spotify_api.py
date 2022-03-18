@@ -14,13 +14,13 @@ def get_playlist_tracks(playlist_id):
 
 def main():
     #results = get_playlists_user('markettes99')
-    resultsVictor = get_playlists_user('garciavicval')
-    result_playlist = get_playlist_tracks(resultsVictor['items'][0]['id'])
-    for res in resultsVictor['items']:
-        print(res['id'])
+    resultsPlaylistsVictor = get_playlists_user('garciavicval')
+    result_playlists_tracks = get_playlist_tracks(resultsPlaylistsVictor['items'][3]['id'])
+    #for res in resultsVictor['items']:
+    #    print(res['id'])
 
-    for res in result_playlist['items']:
-        print(res['track']['name'])
+    for res in result_playlists_tracks['items']:
+        print(res['track']['name'] + ' -> ' + res['track']['artists'][0]['name'])
 
 
 if __name__ == "__main__":
