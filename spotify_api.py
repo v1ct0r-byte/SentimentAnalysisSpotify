@@ -14,8 +14,8 @@ def get_playlist_tracks(playlist_id):
 
 def main():
     #results = get_playlists_user('markettes99')
-    resultsPlaylistsVictor = get_playlists_user('garciavicval')
-    result_playlists_tracks = get_playlist_tracks(resultsPlaylistsVictor['items'][3]['id'])
+    result_playlists = get_playlists_user('garciavicval')
+    result_playlists_tracks = get_playlist_tracks(result_playlists['items'][4]['id'])
     #for res in resultsVictor['items']:
     #    print(res['id'])
 
