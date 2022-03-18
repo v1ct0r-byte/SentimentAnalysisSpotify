@@ -20,6 +20,7 @@ def getDataframeOfUser(user):
     #Extraccion de todas las canciones de cada playlist
     for numId in range(0,len(IDsPlaylists)):
         df = getDataframeFromPlaylist(IDsPlaylists[numId])
+
         #Añadimos columna con el nombre de la playlist
         df['PlaylistName'] = NamesPlaylists[numId]
         frames.append(df)
@@ -31,12 +32,28 @@ def getDataframeFromPlaylist(idPlaylist):
     #De cada playlist cogemos las canciones
     result_playlists_tracks = sapi.get_playlist_tracks(idPlaylist)
     tracks = result_playlists_tracks['items']
+
+    #Recopilación por orden del artista principal de cada composición musical
+    artists = []
+    for track in tracks:
+        artists.append(track['track']['artists'][0]['name'])
+
     #Lo convertimos a dataframe
+    trackDataframe = pd.json_normalize(tracks)
 
-    return pd.json_normalize(tracks)
+    #Renombramos columnas
+    columnsDataFrame = trackDataframe.columns
+    #Renombramos columnas
+    trackDataframe.rename(columns={columnsDataFrame[16]:'SongReleaseDate',columnsDataFrame[21]:'ArtistName',columnsDataFrame[26]:'SongIsExplicit',columnsDataFrame[32]:'SongName'},inplace=True)
+    
+    #Dejamos solo las columans que nos interesan
+    trackDataframe = trackDataframe[['SongReleaseDate','ArtistName','SongIsExplicit','SongName']]
 
-    #Y almacenamos su artista y su nombre
-    #artistas = result_playlists_tracks['items']['track']['artists'][0]
+    #Sustituimos la columna de artistas por el artista principal de la canción
+    trackDataframe['ArtistName'] = artists
 
-result = getDataframeOfUser('garciavicval')
-result.to_csv('victorSongs.csv')
+    return trackDataframe
+
+#Descomentar para ver un csv con los datos extraídos
+#result = getDataframeOfUser('garciavicval')
+#result.to_csv('victorSongs.csv')
