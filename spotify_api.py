@@ -14,7 +14,13 @@ def get_playlist_tracks(playlist_id):
     return(sp.playlist_tracks(playlist_id))
 
 def main():
-    get_playlists_user('markettes99')
+    results = get_playlists_user('markettes99')
+    result_playlist = get_playlist_tracks(results['items'][0]['id'])
+    for res in results['items']:
+        print(res['id'])
+
+    for res in result_playlist['items']:
+        print(res['track']['name'])
 
 
 if __name__ == "__main__":
