@@ -41,15 +41,14 @@ def getDataframeFromPlaylist(idPlaylist):
 
     #Lo convertimos a dataframe
     trackDataframe = pd.json_normalize(tracks)
-    trackDataframe.to_csv(index=False)
 
     #Renombramos columnas
     columnsDataFrame = trackDataframe.columns
     #Renombramos columnas
-    trackDataframe.rename(columns={columnsDataFrame[16]:'SongReleaseDate',columnsDataFrame[21]:'ArtistName',columnsDataFrame[26]:'SongIsExplicit',columnsDataFrame[32]:'SongName'},inplace=True)
+    trackDataframe.rename(columns={columnsDataFrame[5]:'UserOwner',columnsDataFrame[15]:'AlbumName',columnsDataFrame[16]:'SongReleaseDate',columnsDataFrame[21]:'ArtistName',columnsDataFrame[26]:'SongIsExplicit',columnsDataFrame[32]:'SongName'},inplace=True)
     
     #Dejamos solo las columans que nos interesan
-    trackDataframe = trackDataframe[['SongReleaseDate','ArtistName','SongIsExplicit','SongName']]
+    trackDataframe = trackDataframe[['UserOwner','AlbumName','SongReleaseDate','ArtistName','SongIsExplicit','SongName']]
 
     #Sustituimos la columna de artistas por el artista principal de la canción
     trackDataframe['ArtistName'] = artists
