@@ -23,7 +23,7 @@ def search_data(artist,title,n,access_token):
     """
     api = genius.Genius(access_token)
     api.timeout = 15
-    api.sleep_time = 1
+    api.sleep_time = 0
 
     list_lyrics = []
     list_title = []

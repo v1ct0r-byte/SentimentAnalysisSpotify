@@ -5,21 +5,27 @@ from helpers import *
 import pandas as pd
 import numpy as np
 import string
-#To plot the graphs
-import matplotlib.pyplot as plt
-plt.style.use('seaborn')
-#library used to count the frequency of words
-from sklearn.feature_extraction.text import CountVectorizer
+
 #To create the sentiment analysis model, tokenization and lemmatization
 import nltk
+
+import ssl
+
+try:
+    _create_unverified_https_context = ssl._create_unverified_context
+except AttributeError:
+    pass
+else:
+    ssl._create_default_https_context = _create_unverified_https_context
+
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 from nltk import word_tokenize
 import nltk.data
-# nltk.download('vader_lexicon')
-# nltk.download('punkt')
-# nltk.download('stopwords')
-# nltk.download('wordnet')
-# nltk.download('omw-1.4')
+nltk.download('vader_lexicon')
+nltk.download('punkt')
+nltk.download('stopwords')
+nltk.download('wordnet')
+nltk.download('omw-1.4')
 
 access_token = "dTEDSEgYrLVPy9VIlmAYjOSfv39HrizCcf2mVKey9D-CkkA9e_gAk6Ve7xEERLue"
 # df0 = search_data('Metallica',3,access_token)
