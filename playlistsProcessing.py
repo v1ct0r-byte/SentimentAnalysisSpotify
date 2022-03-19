@@ -18,7 +18,8 @@ def getDataframeOfUser(user):
     frames = []
 
     #Extraccion de todas las canciones de cada playlist
-    for numId in range(0,len(IDsPlaylists)):
+    #for numId in range(0,len(IDsPlaylists)): #Creo que yo tengo muchas voy a poner solo las 5 primeras
+    for numId in range(0,min(len(IDsPlaylists),20)):
         df = getDataframeFromPlaylist(IDsPlaylists[numId])
 
         #Añadimos columna con el nombre de la playlist
@@ -40,6 +41,7 @@ def getDataframeFromPlaylist(idPlaylist):
 
     #Lo convertimos a dataframe
     trackDataframe = pd.json_normalize(tracks)
+    trackDataframe.to_csv(index=False)
 
     #Renombramos columnas
     columnsDataFrame = trackDataframe.columns

@@ -1,7 +1,7 @@
 import lyricsgenius as genius
 import pandas as pd
 import string 
-
+from requests.exceptions import Timeout
 import nltk
 from nltk.tokenize import word_tokenize
 from nltk.stem import WordNetLemmatizer 
@@ -21,15 +21,16 @@ def search_data(artist,title,n,access_token):
     n = max numbers of songs
     access_token = your access token of the genius api
     """
-    
     api = genius.Genius(access_token)
+    api.timeout = 15
+    api.sleep_time = 1
 
     list_lyrics = []
     list_title = []
     list_artist = []
     list_album = []
     list_year = []
-
+    df = pd.DataFrame()
     if(title == ''):
         artist = api.search_artist(artist,max_songs=n,sort='popularity')
         songs = artist.songs
@@ -41,9 +42,16 @@ def search_data(artist,title,n,access_token):
             #list_year.append(song.year)
         df = pd.DataFrame({'artist':list_artist,'title':list_title,'lyric':list_lyrics})
     else:
-        searched_song = api.search_song(title, artist)
-        df = pd.DataFrame({'artist':[searched_song.artist],'title':[searched_song.title], 'lyric':[searched_song.lyrics]})
-    
+        retries = 0
+        while retries < 3:
+            try:
+                searched_song = api.search_song(title, artist)
+            except Timeout as e:
+                retries += 1
+                continue
+            if(searched_song!=None):
+                df = pd.DataFrame({'artist':[searched_song.artist],'title':[searched_song.title], 'lyric':[searched_song.lyrics]})
+            break
     
 
     # df = pd.DataFrame({'artist':list_artist,'title':list_title,'album':list_album,
