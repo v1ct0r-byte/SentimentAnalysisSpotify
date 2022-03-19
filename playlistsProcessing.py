@@ -27,6 +27,7 @@ def getDataframeOfUser(user):
         frames.append(df)
         #dataframe = pd.concat(dataframe,df)
 
+    pd.concat(frames).to_csv('carlos.csv', index=False)
     return pd.concat(frames)
 
 def getDataframeFromPlaylist(idPlaylist):
@@ -52,7 +53,7 @@ def getDataframeFromPlaylist(idPlaylist):
 
     #Sustituimos la columna de artistas por el artista principal de la canción
     trackDataframe['ArtistName'] = artists
-
+    
     return trackDataframe
 
 #Descomentar para ver un csv con los datos extraídos

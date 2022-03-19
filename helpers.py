@@ -50,7 +50,7 @@ def search_data(artist,title,n,access_token):
                 retries += 1
                 continue
             if(searched_song!=None):
-                df = pd.DataFrame({'artist':[searched_song.artist],'title':[searched_song.title], 'lyric':[searched_song.lyrics]})
+                df = pd.DataFrame({'artist':[artist],'title':[title], 'lyric':[searched_song.lyrics]})
             break
     
 
