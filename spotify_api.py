@@ -21,13 +21,7 @@ def get_playlist_tracks(playlist_id):
 def get_audio_features(track_id):
     result = sp.audio_features(track_id)
     result = result[0]
-    print(result)
-    df = pd.DataFrame(dict(
-        r=[result['danceability'], result['energy'], result['acousticness'], result['speechiness'], result['instrumentalness']],
-        theta=['Danceability', 'Energy', 'Acousticness', 'Speechiness', 'Instrumentalness']
-    ))
-
-    return (df, result['tempo'])
+    return result
 
 def main():
     #result_playlists = get_playlists_user('markettes99')
