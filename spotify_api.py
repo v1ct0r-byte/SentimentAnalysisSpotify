@@ -1,5 +1,6 @@
 import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials
+import pandas as pd
 
 import config
 
@@ -17,19 +18,10 @@ def get_playlist_tracks(playlist_id):
 # Función que devuelve las features de una o varias canciones
 # La entrada para el método tiene que ser un array de los IDs de las canciones
 # El return devuelve un diccionario con el id de la canción como key junto con los valores de los distintos aspectos.
-def get_audio_features(track_ids):
-    results = (sp.audio_features(track_ids))
-    res_dict = {}
-    for result in results:
-        res_dict[result['id']] = {
-            'danceability': result['danceability'],
-            'energy' : result['energy'],
-            'acousticness' : result['acousticness'],
-            'speechiness' : result['speechiness'],
-            'instrumentalness' : result['instrumentalness'],
-            'tempo' : result['tempo']
-        }
-    return res_dict
+def get_audio_features(track_id):
+    result = sp.audio_features(track_id)
+    result = result[0]
+    return result
 
 def main():
     #result_playlists = get_playlists_user('markettes99')
@@ -42,12 +34,26 @@ def main():
     result_playlists_tracks = get_playlist_tracks(result_playlists['items'][0]['id'])
 
     #nombres y primer artista de las cancioens de la primera playlist
-    for res in result_playlists_tracks['items']:
-        print(res['track']['name'] + ' -> ' + res['track']['artists'][0]['name'])
+    # for res in result_playlists_tracks['items']:
+    #     print(res['track']['name'] + ' -> ' + res['track']['artists'][0]['name'])
 
-    for res in result_playlists_tracks['items']:
-        print(res)
-        get_audio_features([res['track']['id']])
+    # for res in result_playlists_tracks['items']:
+    #     print(res)
+    #     get_audio_features([res['track']['id']])
+
+    #Radar chart for a song
+    import spotify_api as sp
+    import pandas as pd
+    import plotly.express as px
+
+    data,tempo = sp.get_audio_features('6rPO02ozF3bM7NnOV4h6s2')
+    print(data)
+    print(tempo)
+
+    fig = px.line_polar(data, r='r', theta='theta', line_close=True)
+    fig.update_traces(fill='toself')
+    fig.show()
+
 
 
 

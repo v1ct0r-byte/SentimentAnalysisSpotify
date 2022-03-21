@@ -1,6 +1,16 @@
 import spotify_api as sapi
 import pandas as pd
 
+def getAudioFeatures(trackid):
+    result = sapi.get_audio_features(trackid)
+
+    df = pd.DataFrame(dict(
+        r=[result['danceability'], result['energy'], result['acousticness'], result['speechiness'], result['instrumentalness']],
+        theta=['Danceability', 'Energy', 'Acousticness', 'Speechiness', 'Instrumentalness']
+    ))
+
+    return (df, result['tempo'])
+
 def getDataframeOfUser(user):
     #Creación del dataframe
     #dataframe = pd.DataFrame
