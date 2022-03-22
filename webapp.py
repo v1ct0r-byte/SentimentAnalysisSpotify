@@ -1,6 +1,5 @@
 from click import option
 from dash import *
-from platformdirs import user_cache_dir
 import plotly.express as px
 import pandas as pd
 import playlistsProcessing as pp
