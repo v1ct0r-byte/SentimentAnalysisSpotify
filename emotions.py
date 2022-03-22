@@ -1,6 +1,6 @@
 #libraries used to extract, clean and manipulate the data
 from re import I
-from bleach import clean
+#from bleach import clean
 from helpers import *
 import pandas as pd
 import numpy as np
