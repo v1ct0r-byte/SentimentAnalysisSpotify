@@ -6,8 +6,11 @@ import nltk
 from nltk.tokenize import word_tokenize
 from nltk.stem import WordNetLemmatizer 
 from nltk.corpus import stopwords
-#nltk.download('stopwords')
-#nltk.download('wordnet')      
+nltk.download('vader_lexicon')
+nltk.download('punkt')
+nltk.download('stopwords')
+nltk.download('wordnet')
+nltk.download('omw-1.4')      
 
 
 def search_data(artist,title,n,access_token):
@@ -50,7 +53,7 @@ def search_data(artist,title,n,access_token):
                 retries += 1
                 continue
             if(searched_song!=None):
-                df = pd.DataFrame({'artist':[searched_song.artist],'title':[searched_song.title], 'lyric':[searched_song.lyrics]})
+                df = pd.DataFrame({'artist':[artist],'title':[title], 'lyric':[searched_song.lyrics]})
             break
     
 

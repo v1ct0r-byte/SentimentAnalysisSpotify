@@ -1,6 +1,9 @@
+from tkinter.font import names
 from click import option
 from dash import *
+#from matplotlib.pyplot import figure
 import plotly.express as px
+import plotly.graph_objects as go
 import pandas as pd
 from pyrsistent import v
 import processing as pp
@@ -8,6 +11,7 @@ import emotions as em
 
 user_df = pd.DataFrame()
 playlists = []
+songsList = []
 
 app = Dash(__name__)
 app.layout = html.Div(children=[
@@ -30,6 +34,8 @@ app.layout = html.Div(children=[
     html.Div(id='sel-playlist',children=[
         html.Label(children='Selecciona una playlist '),
         dcc.Dropdown(id='playlist'),
+        dcc.Slider(id='slider',min=1,value=1,step=1,max=2),
+        html.Button(id='analize',children='Analizar',n_clicks=0),
     ]),
     html.Br(),
     html.Div(children=[
@@ -38,8 +44,15 @@ app.layout = html.Div(children=[
     ]),
     html.Br(),
     html.Div(children=[
-        html.Label(children='Gráfica de canciones explicitas de una playlist'),
-        dcc.Graph(id='explicit-graph'),
+        html.Label(children='Características de canciones de la playlist'),
+        dcc.Dropdown(id='song1'),
+        html.Button(id='reset-polar',children='Reset',n_clicks=0),
+        dcc.Graph(id='polar',figure=go.Figure())
+    ]),
+    html.Br(),
+    html.Div(children=[
+        html.Label(children='Gráfica de canciones explicitas de la playlist seleccionda'),
+            dcc.Graph(id='explicit-graph',figure=go.Figure()),
     ]),
 ])
 
@@ -49,8 +62,8 @@ app.layout = html.Div(children=[
     State('inputuser','value'),
 )
 def get_playlists(clicks,value):
-    #lo que está haciendo victor
     global user_df
+    user_df = pd.DataFrame()
     user_df = pp.getDataframeOfUser(value)
     res = user_df['PlaylistName'].unique()
         
@@ -69,18 +82,37 @@ def get_playlists(clicks,value):
     return res
 
 @app.callback(
-    Output('sentiment-graph','figure'),
+    Output('slider','max'),
+    Output('song1','options'),
+    Output('song1','value'),
     Input('playlist','value'),
 )
 def get_songs(value):
-    global user_df
+    global user_df, songsList
     songs_df = user_df[user_df['PlaylistName']==value]
     songsList = []
+    options = []
     for index, row in songs_df.iterrows():
         songsList.append({'artist':row['ArtistName'],'song':row['SongName']})
+        options.append({'label':row['ArtistName'] + ' - ' + row['SongName'],'value':row['SongId']})
+    
+    return len(songsList), options, options[0]['value']
+    
+    
+@app.callback(
+    Output('sentiment-graph','figure'),
+    Input('analize', 'n_clicks'),
+    State('slider','value')
+)
+def show_graph(nclicks, value):
+    global songsList,user_df
+    songsList = songsList[0:value]
     print(songsList)
-    songsList = songsList[0:4]
     res_df = em.getLyricsInfo(songsList)
+    #merged_df = user_df.merge(res_df,'left',left_on='SongName',right_on='title')
+    res_df.to_csv('carlos2.csv',index='false')
+
+    #merged_df.to_csv('carlos3.csv',index='false')
     max_range = max(res_df['positive'].max(),res_df['negative'].max())
     max_range *= 1.05
     fig = px.scatter(res_df,'positive', 'negative',range_x=[-0.01,max_range], range_y=[-0.01,max_range],symbol='artist',color="title")
@@ -90,16 +122,73 @@ def get_songs(value):
     Output('explicit-graph','figure'),
     Input('playlist','value')
 )
-def get_explicitness(value):
+def show_explicitness(value):
     global user_df
-    #Cojemos solo las columnas de explicit
-    fig = px.pie(user_df,names=['SongIsExplicit'])
+    songs = user_df[user_df['PlaylistName']==value]
+    explicitness = songs['SongIsExplicit'].tolist()
+    numYes = 0
+    numNo = 0
+    #Contamos las columnas de explicit
+    for song in explicitness:
+        if song == True:
+            numYes = numYes + 1
+        else:
+            numNo = numNo + 1
+    values = [numYes, numNo]
+    names = ['Explicita', 'Familiar']
+    
+    fig = px.pie(values=values, names=names)
     return fig
 
 # songs_df = user_df[user_df['PlaylistName']==value]
 #     songsList = []
 #     for row in songs_df.iterrows():
 #         songsList.append({'explicit':row['SongIsExplicit']})
+# @app.callback(
+#     Output('polar','figure'),
+#     Input('song1','value')
+# )
+# def show_polar(value):
+#     data,tempo = pp.getAudioFeatures(value)
+#     fig = px.line_polar(data, r='r', theta='theta', line_close=True)
+#     fig.update_traces(fill='toself')
+#     return fig
+
+@app.callback(
+    Output('polar','figure'),
+    Input('song1','value'),
+    Input('reset-polar', 'n_clicks'),
+    State('polar','figure')
+)
+def show_polar(value, clicks, figure):
+    ctx = callback_context
+
+    if not ctx.triggered:
+        button_id = 'No clicks yet'
+    else:
+        button_id = ctx.triggered[0]['prop_id'].split('.')[0]
+
+    if(button_id=='reset-polar'):
+        figure['data'] = []
+        return figure
+    else:
+        data,tempo = pp.getAudioFeatures(value)
+        print(figure)
+        if(figure['data']!=None):
+            figure['data'].append(go.Scatterpolar(r=data['r'],
+                theta=data['theta'],
+                fill='toself',
+                name=user_df.loc[user_df['SongId']==value, 'ArtistName'].iloc[0] + ' - ' + user_df.loc[user_df['SongId']==value, 'SongName'].iloc[0]
+            ))
+        # else:
+        #     figure['data']=[go.Scatterpolar(r=data['r'],
+        #         theta=data['theta'],
+        #         fill='toself',
+        #         name = user_df.loc[user_df['SongId']==value, 'SongName'].iloc[0]
+        #         #name=user_df[user_df['SongId']==value]['ArtistName'].item() + ' - ' + user_df[user_df['SongId']==value]['SongName'].item()
+        #     )]
+        return figure
+
 
 if __name__ == '__main__':
     app.run_server(debug=True)

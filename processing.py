@@ -37,6 +37,7 @@ def getDataframeOfUser(user):
         frames.append(df)
         #dataframe = pd.concat(dataframe,df)
 
+    #pd.concat(frames).to_csv('carlos.csv', index=False)
     return pd.concat(frames)
 
 def getDataframeFromPlaylist(idPlaylist):
@@ -51,20 +52,20 @@ def getDataframeFromPlaylist(idPlaylist):
 
     #Lo convertimos a dataframe
     trackDataframe = pd.json_normalize(tracks)
-
     #Renombramos columnas
     columnsDataFrame = trackDataframe.columns
     #Renombramos columnas
-    trackDataframe.rename(columns={columnsDataFrame[5]:'UserOwner',columnsDataFrame[15]:'AlbumName',columnsDataFrame[16]:'SongReleaseDate',columnsDataFrame[21]:'ArtistName',columnsDataFrame[26]:'SongIsExplicit',columnsDataFrame[32]:'SongName'},inplace=True)
+    trackDataframe.rename(columns={columnsDataFrame[5]:'UserOwner',columnsDataFrame[15]:'AlbumName',columnsDataFrame[16]:'SongReleaseDate',columnsDataFrame[21]:'ArtistName',columnsDataFrame[26]:'SongIsExplicit',columnsDataFrame[30]:'SongId',columnsDataFrame[32]:'SongName'},inplace=True)
     
     #Dejamos solo las columans que nos interesan
-    trackDataframe = trackDataframe[['UserOwner','AlbumName','SongReleaseDate','ArtistName','SongIsExplicit','SongName']]
+    trackDataframe = trackDataframe[['UserOwner','AlbumName','SongReleaseDate','ArtistName','SongIsExplicit','SongId','SongName']]
 
     #Sustituimos la columna de artistas por el artista principal de la canción
     trackDataframe['ArtistName'] = artists
-
+    
     return trackDataframe
-
+# if __name__ == "__main__":
+#     getDataframeFromPlaylist('6fG72k3PzYDFxPBho60ZKB')
 #Descomentar para ver un csv con los datos extraídos
 #result = getDataframeOfUser('garciavicval')
 #result.to_csv('victorSongs.csv')
