@@ -2,6 +2,7 @@ from click import option
 from dash import *
 import plotly.express as px
 import pandas as pd
+from pyrsistent import v
 import processing as pp
 import emotions as em
 
@@ -92,9 +93,13 @@ def get_songs(value):
 def get_explicitness(value):
     global user_df
     #Cojemos solo las columnas de explicit
-    df = user_df['SongIsExplicit']
-    fig = px.pie(df, values='a', names='SongIsExplicit')
+    fig = px.pie(user_df,names=['SongIsExplicit'])
     return fig
+
+# songs_df = user_df[user_df['PlaylistName']==value]
+#     songsList = []
+#     for row in songs_df.iterrows():
+#         songsList.append({'explicit':row['SongIsExplicit']})
 
 if __name__ == '__main__':
     app.run_server(debug=True)
