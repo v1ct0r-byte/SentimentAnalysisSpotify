@@ -2,7 +2,7 @@ from click import option
 from dash import *
 import plotly.express as px
 import pandas as pd
-import playlistsProcessing as pp
+import processing as pp
 import emotions as em
 
 user_df = pd.DataFrame()
