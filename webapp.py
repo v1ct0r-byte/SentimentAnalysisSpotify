@@ -1,6 +1,6 @@
 from click import option
 from dash import *
-from matplotlib.pyplot import figure
+#from matplotlib.pyplot import figure
 import plotly.express as px
 import plotly.graph_objects as go
 import pandas as pd
