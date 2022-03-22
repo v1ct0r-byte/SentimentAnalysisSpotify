@@ -35,6 +35,11 @@ app.layout = html.Div(children=[
         html.Label(children='Gráfica de sentimiento de la playlist seleccionada'),
         dcc.Graph(id='sentiment-graph'),
     ]),
+    html.Br(),
+    html.Div(children=[
+        html.Label(children='Gráfica de canciones explicitas de una playlist'),
+        dcc.Graph(id='explicit-graph'),
+    ]),
 ])
 
 @app.callback(
@@ -78,6 +83,17 @@ def get_songs(value):
     max_range = max(res_df['positive'].max(),res_df['negative'].max())
     max_range *= 1.05
     fig = px.scatter(res_df,'positive', 'negative',range_x=[-0.01,max_range], range_y=[-0.01,max_range],symbol='artist',color="title")
+    return fig
+
+@app.callback(
+    Output('explicit-graph','figure'),
+    Input('playlist','value')
+)
+def get_explicitness(value):
+    global user_df
+    #Cojemos solo las columnas de explicit
+    df = user_df['SongIsExplicit']
+    fig = px.pie(df, values='a', names='SongIsExplicit')
     return fig
 
 if __name__ == '__main__':
