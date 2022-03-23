@@ -15,10 +15,10 @@ songsList = []
 
 app = Dash(__name__)
 app.layout = html.Div(className='row',children=[
-    html.H1(children='Analizador de sentimientos'),
+    html.H1(children='Analizador de canciones'),
 
     html.Div(children='''
-        Analiza los sentimientos que transmiten la música que escuchas en Spotify
+        Analiza la canción y los sentimientos que transmiten la música que escuchas en Spotify
     '''),
     html.Br(),
     html.Div(children=[
@@ -35,16 +35,7 @@ app.layout = html.Div(className='row',children=[
         html.Label(children='Selecciona una playlist '),
         dcc.Dropdown(id='playlist'),
     ]),
-    html.Br(),
-    html.Div(children=[
-        html.Br(),
-            html.Label(children='Indica el número de canciones a analizar'),
-            dcc.Slider(id='slider',min=1,value=1,step=1,max=2),
-            html.Button(id='analize',children='Analizar',n_clicks=0),
-            html.Label(children='Gráfica de sentimiento de la playlist seleccionada'),
-            html.Br(),
-            dcc.Graph(id='sentiment-graph'),
-    ]),
+    
     html.Br(),
     html.Div(children=[
         html.Div(children=[
@@ -58,6 +49,16 @@ app.layout = html.Div(className='row',children=[
             html.Br(),
             dcc.Graph(id='explicit-graph',figure=go.Figure())
         ],className="row",style={'width': '49%','display': 'inline-block'}),
+    ]),
+    html.Br(),
+    html.Div(children=[
+        html.Br(),
+            html.Label(children='Indica el número de canciones a analizar'),
+            dcc.Slider(id='slider',min=1,value=1,step=1,max=2),
+            html.Button(id='analize',children='Analizar',n_clicks=0),
+            html.Label(children='Gráfica de sentimiento de la playlist seleccionada'),
+            html.Br(),
+            dcc.Graph(id='sentiment-graph'),
     ]),
 ])
 
@@ -162,11 +163,13 @@ def show_explicitness(value):
 
 @app.callback(
     Output('polar','figure'),
+    Input('playlist','valuePlay'),
     Input('song1','value'),
+
     Input('reset-polar', 'n_clicks'),
     State('polar','figure')
 )
-def show_polar(value, clicks, figure):
+def show_polar(valuePlaylist,value,clicks, figure):
     ctx = callback_context
 
     if not ctx.triggered:
@@ -174,7 +177,7 @@ def show_polar(value, clicks, figure):
     else:
         button_id = ctx.triggered[0]['prop_id'].split('.')[0]
         
-    if(button_id=='reset-polar'):
+    if(button_id=='reset-polar' or button_id=='playlist'):
         figure['data'] = []
         return figure
     else:
@@ -197,4 +200,4 @@ def show_polar(value, clicks, figure):
 
 
 if __name__ == '__main__':
-    app.run_server(debug=True)
+    app.run_server(debug=False)
