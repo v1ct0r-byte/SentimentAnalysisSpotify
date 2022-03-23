@@ -120,6 +120,7 @@ def show_graph(nclicks, value):
     #merged_df.to_csv('carlos3.csv',index='false')
     max_range = max(res_df['positive'].max(),res_df['negative'].max())
     max_range *= 1.05
+    fig = []
     fig = px.scatter(res_df,'positive', 'negative',range_x=[-0.01,max_range], range_y=[-0.01,max_range],symbol='artist',color="title")
     return fig
 
@@ -172,13 +173,13 @@ def show_polar(value, clicks, figure):
         button_id = 'No clicks yet'
     else:
         button_id = ctx.triggered[0]['prop_id'].split('.')[0]
-
+        
     if(button_id=='reset-polar'):
         figure['data'] = []
         return figure
     else:
         data,tempo = pp.getAudioFeatures(value)
-        print(figure)
+        #print(figure)
         if(figure['data']!=None):
             figure['data'].append(go.Scatterpolar(r=data['r'],
                 theta=data['theta'],
