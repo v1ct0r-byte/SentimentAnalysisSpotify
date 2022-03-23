@@ -14,7 +14,7 @@ playlists = []
 songsList = []
 
 app = Dash(__name__)
-app.layout = html.Div(children=[
+app.layout = html.Div(className='row',children=[
     html.H1(children='Analizador de sentimientos'),
 
     html.Div(children='''
@@ -34,25 +34,30 @@ app.layout = html.Div(children=[
     html.Div(id='sel-playlist',children=[
         html.Label(children='Selecciona una playlist '),
         dcc.Dropdown(id='playlist'),
-        dcc.Slider(id='slider',min=1,value=1,step=1,max=2),
-        html.Button(id='analize',children='Analizar',n_clicks=0),
     ]),
     html.Br(),
     html.Div(children=[
-        html.Label(children='Gráfica de sentimiento de la playlist seleccionada'),
-        dcc.Graph(id='sentiment-graph'),
+        html.Br(),
+            html.Label(children='Indica el número de canciones a analizar'),
+            dcc.Slider(id='slider',min=1,value=1,step=1,max=2),
+            html.Button(id='analize',children='Analizar',n_clicks=0),
+            html.Label(children='Gráfica de sentimiento de la playlist seleccionada'),
+            html.Br(),
+            dcc.Graph(id='sentiment-graph'),
     ]),
     html.Br(),
     html.Div(children=[
-        html.Label(children='Características de canciones de la playlist'),
-        dcc.Dropdown(id='song1'),
-        html.Button(id='reset-polar',children='Reset',n_clicks=0),
-        dcc.Graph(id='polar',figure=go.Figure())
-    ]),
-    html.Br(),
-    html.Div(children=[
-        html.Label(children='Gráfica de canciones explicitas de la playlist seleccionda'),
-            dcc.Graph(id='explicit-graph',figure=go.Figure()),
+        html.Div(children=[
+            html.Label(children='Características de canciones de la playlist'),
+            dcc.Dropdown(id='song1'),
+            html.Button(id='reset-polar',children='Reset',n_clicks=0),
+            dcc.Graph(id='polar',figure=go.Figure())
+        ],className="row",style={'width': '49%','display': 'inline-block'}),
+        html.Div(children=[
+            html.Label(children='Gráfica de canciones explicitas de la playlist seleccionda'),
+            html.Br(),
+            dcc.Graph(id='explicit-graph',figure=go.Figure())
+        ],className="row",style={'width': '49%','display': 'inline-block'}),
     ]),
 ])
 
