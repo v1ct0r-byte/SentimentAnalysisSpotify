@@ -7,5 +7,5 @@ Most of the written code is in python version 3.9.6. We also use some libraries 
 
 1. Pandas 
 2. Plotly
-3. Genius API
+3. Genius
 4. Spotify API 
