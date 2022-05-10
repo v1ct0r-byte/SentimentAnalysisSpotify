@@ -27,7 +27,7 @@ import nltk.data
 # nltk.download('wordnet')
 # nltk.download('omw-1.4')
 
-access_token = "dTEDSEgYrLVPy9VIlmAYjOSfv39HrizCcf2mVKey9D-CkkA9e_gAk6Ve7xEERLue"
+access_token = "PLACE_YOUR_GENIUS_ACCES_TOKEN_HERE"
 # df0 = search_data('Metallica',3,access_token)
 # df = clean_lyrics(df0,'lyric')
 # df = df[df['lyric'].notnull()]
